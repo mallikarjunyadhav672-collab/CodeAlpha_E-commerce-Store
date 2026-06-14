@@ -1,0 +1,90 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About — LUXE</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="about-page">
+  <nav>
+    <div class="logo">LUXE</div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/shop/">Shop</a></li>
+      <li><a href="/collections/">Collections</a></li>
+      <li><a href="/about/" class="active">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <input class="search-box" type="text" placeholder="Search products...">
+      <button class="cart-btn" onclick="toggleCart()">🛍 Cart <span class="cart-count" id="cartCount">0</span></button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section" style="padding-top:48px">
+      <div class="section-header">
+        <h2 class="section-title">About <span>LUXE</span></h2>
+        <a class="see-all" href="/shop/">Shop now</a>
+      </div>
+
+      <div style="display:flex;gap:40px;align-items:flex-start">
+        <div style="flex:1;max-width:740px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:12px">Our Story</h3>
+          <p style="color:var(--muted);line-height:1.8;margin-bottom:16px">LUXE began with a simple idea: curate exceptional products that combine timeless design and premium quality. We collaborate with trusted makers and designers to bring distinctive collections to discerning customers worldwide.</p>
+
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-top:20px">Our Values</h3>
+          <ul style="color:var(--muted);line-height:1.8;margin-top:8px">
+            <li>Quality-first selection and responsible sourcing.</li>
+            <li>Thoughtful design that lasts beyond seasons.</li>
+            <li>Exemplary customer service and easy returns.</li>
+          </ul>
+        </div>
+
+        <aside style="width:360px">
+          <div style="background:var(--card);padding:20px;border-radius:12px;border:1px solid var(--border)">
+            <h4 style="margin-bottom:8px">Contact</h4>
+            <p style="color:var(--muted);margin-bottom:12px">Questions about an order or a product? Our team is here to help.</p>
+            <p style="color:var(--muted);font-size:.95rem;margin-bottom:8px"><strong>Email:</strong> support@luxe.example</p>
+            <p style="color:var(--muted);font-size:.95rem"><strong>Hours:</strong> Mon–Fri 9am–6pm</p>
+          </div>
+        </aside>
+      </div>
+
+      <div style="margin-top:48px">
+        <h3 class="section-title">Meet The Team</h3>
+        <div style="display:flex;gap:18px;margin-top:18px;flex-wrap:wrap">
+          <div style="background:var(--card);padding:18px;border-radius:10px;min-width:220px;flex:1">
+            <img class="team-photo" src="https://picsum.photos/seed/team_alex/400/300" alt="Alex Morgan">
+            <strong>Alex Morgan</strong>
+            <div style="color:var(--muted);font-size:.9rem">Founder & Creative Director</div>
+          </div>
+          <div style="background:var(--card);padding:18px;border-radius:10px;min-width:220px;flex:1">
+            <img class="team-photo" src="https://picsum.photos/seed/team_riley/400/300" alt="Riley Chen">
+            <strong>Riley Chen</strong>
+            <div style="color:var(--muted);font-size:.9rem">Head of Product</div>
+          </div>
+          <div style="background:var(--card);padding:18px;border-radius:10px;min-width:220px;flex:1">
+            <img class="team-photo" src="https://picsum.photos/seed/team_jordan/400/300" alt="Jordan Lee">
+            <strong>Jordan Lee</strong>
+            <div style="color:var(--muted);font-size:.9rem">Customer Experience</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:48px">
+        <h3 class="section-title">Newsletter</h3>
+        <p style="color:var(--muted);margin-bottom:12px">Subscribe for curated drops and member-only offers.</p>
+        <form onsubmit="return submitNewsletter(event)" style="display:flex;gap:8px;max-width:520px">
+          <input name="email" id="newsletterEmail" class="search-box" placeholder="your@email.com" style="flex:1">
+          <button class="btn-primary" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="{% static 'js/app.js' %}"></script>
+  {% include 'partials/footer.html' %}
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUXE STORE — Premium Shopping</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #1a1a1a;
+    --card: #222222;
+    --gold: #c9a84c;
+    --gold-light: #e4c97e;
+    --white: #f5f5f0;
+    --muted: #888;
+    --accent: #e85d4a;
+    --green: #2ecc71;
+    --border: #2e2e2e;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top:0; z-index:100;
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration:none; font-size:.9rem; letter-spacing:.5px; transition:.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-right { display:flex; gap:16px; align-items:center; }
+  .search-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    color: var(--white);
+    font-size:.85rem; width:200px; outline:none;
+  }
+  .search-box::placeholder { color: var(--muted); }
+  .cart-btn {
+    background: var(--gold);
+    color: #000; border:none; border-radius:6px;
+    padding: 9px 20px; cursor:pointer; font-weight:600; font-size:.85rem;
+    display:flex; align-items:center; gap:8px; position:relative;
+    transition: background .2s;
+  }
+  .cart-btn:hover { background: var(--gold-light); }
+  .cart-count {
+    background: var(--accent);
+    color:#fff; border-radius:50%; width:18px; height:18px;
+    font-size:.7rem; display:flex; align-items:center; justify-content:center;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative; height: 600px; overflow:hidden;
+    display:flex; align-items:center;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, #1a0a00 0%, #0d0d0d 50%, #001a0a 100%);
+  }
+  .hero-img {
+    position:absolute; right:0; top:0; height:100%; width:55%;
+    object-fit:cover; opacity:.4;
+    mask-image: linear-gradient(to left, rgba(0,0,0,.8) 60%, transparent 100%);
+  }
+  .hero-content {
+    position:relative; z-index:2; padding: 0 80px; max-width:640px;
+  }
+  .hero-eyebrow {
+    font-size:.75rem; letter-spacing:4px; color:var(--gold);
+    text-transform:uppercase; margin-bottom:16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size:3.8rem; line-height:1.1; font-weight:700;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p { color: var(--muted); font-size:1.05rem; line-height:1.7; margin-bottom:36px; }
+  .hero-btns { display:flex; gap:14px; }
+  .btn-primary {
+    background: var(--gold); color:#000; border:none;
+    padding:14px 32px; border-radius:6px; font-weight:600;
+    cursor:pointer; font-size:.95rem; transition:.2s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform:translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: var(--white);
+    border: 1px solid var(--border);
+    padding:14px 32px; border-radius:6px; font-weight:500;
+    cursor:pointer; font-size:.95rem; transition:.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color:var(--gold); }
+
+  /* STATS */
+  .stats {
+    display:grid; grid-template-columns: repeat(4,1fr);
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    background: var(--surface);
+  }
+  .stat {
+    padding: 28px 40px; text-align:center;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right:none; }
+  .stat-val { font-family:'Playfair Display',serif; font-size:2rem; color:var(--gold); font-weight:700; }
+  .stat-label { font-size:.8rem; color:var(--muted); letter-spacing:1px; margin-top:4px; }
+
+  /* CATEGORIES */
+  .section { padding: 60px 60px; }
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:36px; }
+  .section-title { font-family:'Playfair Display',serif; font-size:2rem; }
+  .section-title span { color:var(--gold); }
+  .see-all { color:var(--gold); text-decoration:none; font-size:.85rem; letter-spacing:.5px; }
+
+  .categories { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .cat-card {
+    position:relative; border-radius:12px; overflow:hidden; cursor:pointer;
+    height:200px;
+    transition: transform .3s;
+  }
+  .cat-card:hover { transform: scale(1.02); }
+  .cat-card img { width:100%; height:100%; object-fit:cover; }
+  .cat-overlay {
+    position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(0,0,0,.8) 0%, transparent 60%);
+    display:flex; flex-direction:column; justify-content:flex-end; padding:18px;
+  }
+  .cat-name { font-size:1.1rem; font-weight:600; }
+  .cat-count { font-size:.78rem; color:var(--gold); margin-top:2px; }
+
+  /* PRODUCTS */
+  .products-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+  .product-card {
+    background: var(--card); border-radius:14px; overflow:hidden;
+    border: 1px solid var(--border);
+    transition: transform .3s, box-shadow .3s;
+    cursor:pointer;
+  }
+  .product-card:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,.5); }
+  .product-img { position:relative; height:240px; overflow:hidden; }
+  .product-img img { width:100%; height:100%; object-fit:cover; transition: transform .4s; }
+  .product-card:hover .product-img img { transform: scale(1.06); }
+  .badge {
+    position:absolute; top:12px; left:12px;
+    background:var(--accent); color:#fff; font-size:.7rem;
+    font-weight:700; padding:4px 10px; border-radius:4px; letter-spacing:.5px;
+  }
+  .badge.new { background: var(--green); }
+  .badge.sale { background: var(--accent); }
+  .wishlist-btn {
+    position:absolute; top:12px; right:12px;
+    background:rgba(0,0,0,.5); border:none; border-radius:50%;
+    width:34px; height:34px; color:#fff; cursor:pointer; font-size:1rem;
+    display:flex; align-items:center; justify-content:center; transition:.2s;
+  }
+  .wishlist-btn:hover { background:var(--gold); color:#000; }
+  .wishlist-btn.active { background:var(--accent); }
+  .product-info { padding:18px; }
+  .product-brand { font-size:.73rem; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; }
+  .product-name { font-size:1rem; font-weight:500; margin:6px 0; }
+  .product-meta { display:flex; align-items:center; justify-content:space-between; margin-top:12px; }
+  .product-price { font-size:1.2rem; font-weight:700; color:var(--gold); }
+  .product-price .old { text-decoration:line-through; color:var(--muted); font-size:.85rem; font-weight:400; margin-left:6px; }
+  .stars { color:var(--gold); font-size:.8rem; }
+  .add-to-cart {
+    width:100%; margin-top:14px;
+    background: var(--gold); color:#000; border:none;
+    padding:11px; border-radius:8px; font-weight:600; font-size:.9rem;
+    cursor:pointer; transition:.2s;
+  }
+  .add-to-cart:hover { background: var(--gold-light); }
+
+  /* BANNER */
+  .promo-banner {
+    margin: 0 60px 60px;
+    background: linear-gradient(135deg, #c9a84c22, #e85d4a22);
+    border: 1px solid var(--gold);
+    border-radius: 16px; padding: 48px 60px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:relative; overflow:hidden;
+  }
+  .promo-banner::before {
+    content:''; position:absolute; right:-80px; top:-80px;
+    width:300px; height:300px; border-radius:50%;
+    background: radial-gradient(circle, rgba(201,168,76,.15), transparent 70%);
+  }
+  .promo-text h2 { font-family:'Playfair Display',serif; font-size:2.2rem; }
+  .promo-text h2 span { color:var(--gold); }
+  .promo-text p { color:var(--muted); margin-top:8px; font-size:.95rem; }
+  .promo-code {
+    background: var(--surface); border:1px dashed var(--gold);
+    border-radius:8px; padding:16px 32px; text-align:center;
+  }
+  .promo-code-label { font-size:.75rem; color:var(--muted); letter-spacing:1px; }
+  .promo-code-val { font-family:'Playfair Display',serif; font-size:2rem; color:var(--gold); font-weight:700; }
+  .promo-code-off { font-size:.85rem; color:var(--white); }
+
+  /* CART DRAWER */
+  .cart-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:200;
+    opacity:0; pointer-events:none; transition:opacity .3s;
+  }
+  .cart-overlay.open { opacity:1; pointer-events:all; }
+  .cart-drawer {
+    position:fixed; right:0; top:0; height:100%; width:420px;
+    background: var(--surface); z-index:201; border-left:1px solid var(--border);
+    transform: translateX(100%); transition: transform .3s ease;
+    display:flex; flex-direction:column;
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-header {
+    padding:24px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .cart-header h3 { font-family:'Playfair Display',serif; font-size:1.4rem; }
+  .close-btn {
+    background:none; border:none; color:var(--white); font-size:1.5rem;
+    cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+    border-radius:6px; transition:.2s;
+  }
+  .close-btn:hover { background:var(--card); }
+  .cart-items { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:16px; }
+  .cart-item {
+    display:flex; gap:14px; padding:14px; background:var(--card);
+    border-radius:10px; border:1px solid var(--border);
+  }
+  .cart-item img { width:72px; height:72px; object-fit:cover; border-radius:8px; }
+  .cart-item-info { flex:1; }
+  .cart-item-name { font-size:.9rem; font-weight:500; }
+  .cart-item-brand { font-size:.75rem; color:var(--gold); margin-bottom:6px; }
+  .cart-item-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .cart-item-price { font-weight:700; color:var(--gold); }
+  .qty-ctrl { display:flex; align-items:center; gap:8px; }
+  .qty-btn {
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--white); width:26px; height:26px; border-radius:4px;
+    cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center;
+  }
+  .qty-btn:hover { border-color:var(--gold); }
+  .qty-val { font-size:.9rem; min-width:20px; text-align:center; }
+  .remove-item { background:none; border:none; color:var(--accent); cursor:pointer; font-size:.8rem; }
+  .cart-footer {
+    padding:20px; border-top:1px solid var(--border);
+  }
+  .cart-total { display:flex; justify-content:space-between; margin-bottom:6px; }
+  .cart-total.grand { font-size:1.1rem; font-weight:700; color:var(--gold); margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+  .checkout-btn {
+    width:100%; background:var(--gold); color:#000; border:none;
+    padding:15px; border-radius:8px; font-weight:700; font-size:1rem;
+    cursor:pointer; margin-top:16px; transition:.2s;
+  }
+  .checkout-btn:hover { background:var(--gold-light); }
+  .empty-cart { text-align:center; padding:60px 20px; color:var(--muted); }
+  .empty-cart .icon { font-size:3rem; margin-bottom:12px; }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:30px; right:30px; z-index:300;
+    background:var(--green); color:#000;
+    padding:14px 24px; border-radius:8px; font-weight:600;
+    transform:translateY(80px); opacity:0; transition:.3s;
+    pointer-events:none;
+  }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  /* FOOTER */
+  footer {
+    background:var(--surface); border-top:1px solid var(--border);
+    padding:60px; display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:40px;
+  }
+  .footer-brand { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--gold); margin-bottom:12px; }
+  .footer-desc { color:var(--muted); font-size:.87rem; line-height:1.7; }
+  footer h4 { font-size:.85rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; color:var(--muted); }
+  footer ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  footer ul a { color:var(--white); text-decoration:none; font-size:.88rem; opacity:.7; transition:.2s; }
+  footer ul a:hover { opacity:1; color:var(--gold); }
+  .footer-bottom {
+    text-align:center; padding:20px 60px;
+    border-top:1px solid var(--border); color:var(--muted); font-size:.8rem;
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px;
+  }
+  .filter-btn {
+    padding:7px 18px; border-radius:20px; border:1px solid var(--border);
+    background:transparent; color:var(--muted); cursor:pointer; font-size:.83rem; transition:.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color:var(--gold); background:var(--gold); color:#000; font-weight:600;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">LUXE</div>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Home</a></li>
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#">Collections</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <input class="search-box" type="text" placeholder="Search products..." id="searchInput" oninput="filterProducts()">
+    <button class="cart-btn" onclick="toggleCart()">
+      🛍 Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <img class="hero-img" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&auto=format&fit=crop" alt="fashion">
+  <div class="hero-content">
+    <p class="hero-eyebrow">New Collection 2025</p>
+    <h1>Elevate Your <span>Style</span> with Premium Finds</h1>
+    <p>Discover curated collections of luxury fashion, electronics, and lifestyle products — delivered to your door.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+      <button class="btn-outline">View Lookbook</button>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-val">50K+</div><div class="stat-label">Happy Customers</div></div>
+  <div class="stat"><div class="stat-val">1,200+</div><div class="stat-label">Premium Products</div></div>
+  <div class="stat"><div class="stat-val">4.9★</div><div class="stat-label">Average Rating</div></div>
+  <div class="stat"><div class="stat-val">Free</div><div class="stat-label">Shipping Over ₹999</div></div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Shop by <span>Category</span></h2>
+    <a href="#" class="see-all">View All →</a>
+  </div>
+  <div class="categories">
+    <div class="cat-card" onclick="filterByCategory('fashion')">
+      <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&auto=format&fit=crop" alt="Fashion">
+      <div class="cat-overlay"><div class="cat-name">Fashion</div><div class="cat-count">312 Products</div></div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('electronics')">
+      <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&auto=format&fit=crop" alt="Electronics">
+      <div class="cat-overlay"><div class="cat-name">Electronics</div><div class="cat-count">189 Products</div></div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('home')">
+      <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&auto=format&fit=crop" alt="Home">
+      <div class="cat-overlay"><div class="cat-name">Home & Living</div><div class="cat-count">245 Products</div></div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('beauty')">
+      <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&auto=format&fit=crop" alt="Beauty">
+      <div class="cat-overlay"><div class="cat-name">Beauty</div><div class="cat-count">167 Products</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section" id="products" style="padding-top:0">
+  <div class="section-header">
+    <h2 class="section-title">Featured <span>Products</span></h2>
+    <a href="#" class="see-all">View All →</a>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
+    <button class="filter-btn" onclick="setFilter(this,'fashion')">Fashion</button>
+    <button class="filter-btn" onclick="setFilter(this,'electronics')">Electronics</button>
+    <button class="filter-btn" onclick="setFilter(this,'home')">Home & Living</button>
+    <button class="filter-btn" onclick="setFilter(this,'beauty')">Beauty</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- PROMO BANNER -->
+<div class="promo-banner">
+  <div class="promo-text">
+    <h2>Special <span>Summer Sale</span></h2>
+    <p>Use the code below at checkout and enjoy 20% off your entire order.</p>
+    <p style="margin-top:10px;color:var(--muted);font-size:.85rem;">Valid until 31st July 2025 · Min. order ₹1,499</p>
+  </div>
+  <div class="promo-code">
+    <div class="promo-code-label">YOUR DISCOUNT CODE</div>
+    <div class="promo-code-val">LUXE20</div>
+    <div class="promo-code-off">20% OFF everything</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">LUXE</div>
+    <p class="footer-desc">Your destination for premium fashion, electronics, and lifestyle products. Quality you can trust, style you'll love.</p>
+  </div>
+  <div>
+    <h4>Shop</h4>
+    <ul>
+      <li><a href="#">New Arrivals</a></li>
+      <li><a href="#">Best Sellers</a></li>
+      <li><a href="#">Sale</a></li>
+      <li><a href="#">Collections</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Support</h4>
+    <ul>
+      <li><a href="#">Track Order</a></li>
+      <li><a href="#">Returns</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Company</h4>
+    <ul>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Careers</a></li>
+      <li><a href="#">Privacy</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">© 2025 LUXE STORE. All rights reserved. Made with ♥ for premium shoppers.</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+    <div class="cart-total"><span>Shipping</span><span style="color:var(--green)">FREE</span></div>
+    <div class="cart-total"><span>Discount</span><span style="color:var(--accent)">-₹0</span></div>
+    <div class="cart-total grand"><span>Total</span><span id="cartTotal">₹0</span></div>
+    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  { id:1, name:'Premium Leather Jacket', brand:'LUXE Originals', price:4999, oldPrice:7999, img:'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&auto=format&fit=crop', badge:'sale', category:'fashion', rating:4.8, reviews:124 },
+  { id:2, name:'Wireless Pro Earbuds', brand:'SoundElite', price:2499, oldPrice:3999, img:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&auto=format&fit=crop', badge:'sale', category:'electronics', rating:4.9, reviews:256 },
+  { id:3, name:'Minimalist Watch', brand:'Chrono Co.', price:8999, img:'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&auto=format&fit=crop', badge:'new', category:'fashion', rating:4.7, reviews:89 },
+  { id:4, name:'Luxury Sofa Set', brand:'HomeVibe', price:34999, oldPrice:49999, img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&auto=format&fit=crop', badge:'sale', category:'home', rating:4.6, reviews:43 },
+  { id:5, name:'Serum Glow Kit', brand:'BeautyLux', price:1299, img:'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&auto=format&fit=crop', badge:'new', category:'beauty', rating:4.8, reviews:315 },
+  { id:6, name:'Ultra 4K Camera', brand:'PixelPro', price:59999, img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&auto=format&fit=crop', badge:'new', category:'electronics', rating:5.0, reviews:67 },
+  { id:7, name:'Designer Sneakers', brand:'StrideLux', price:3499, oldPrice:5999, img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop', badge:'sale', category:'fashion', rating:4.5, reviews:198 },
+  { id:8, name:'Scented Candle Set', brand:'AromaLife', price:799, img:'https://images.unsplash.com/photo-1602781914733-3a99a7a7e0cb?w=400&auto=format&fit=crop', badge:'new', category:'home', rating:4.7, reviews:432 },
+];
+
+let cart = [];
+let wishlist = new Set();
+let activeFilter = 'all';
+let searchTerm = '';
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  let filtered = products.filter(p => {
+    const matchCat = activeFilter === 'all' || p.category === activeFilter;
+    const matchSearch = p.name.toLowerCase().includes(searchTerm) || p.brand.toLowerCase().includes(searchTerm);
+    return matchCat && matchSearch;
+  });
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="product-img">
+        <img src="${p.img}" alt="${p.name}">
+        ${p.badge ? `<span class="badge ${p.badge}">${p.badge.toUpperCase()}</span>` : ''}
+        <button class="wishlist-btn ${wishlist.has(p.id)?'active':''}" onclick="toggleWishlist(${p.id})">
+          ${wishlist.has(p.id)?'❤️':'🤍'}
+        </button>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">${p.brand}</div>
+        <div class="product-name">${p.name}</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:4px;">
+          <span class="stars">${'★'.repeat(Math.floor(p.rating))}</span> ${p.rating} (${p.reviews})
+        </div>
+        <div class="product-meta">
+          <div class="product-price">
+            ₹${p.price.toLocaleString('en-IN')}
+            ${p.oldPrice ? `<span class="old">₹${p.oldPrice.toLocaleString('en-IN')}</span>` : ''}
+          </div>
+        </div>
+        <button class="add-to-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setFilter(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = cat;
+  renderProducts();
+}
+
+function filterByCategory(cat) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(cat) || (cat==='all' && b.textContent==='All'));
+  });
+  renderProducts();
+  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
+
+function filterProducts() {
+  searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  renderProducts();
+}
+
+function toggleWishlist(id) {
+  if (wishlist.has(id)) wishlist.delete(id);
+  else { wishlist.add(id); showToast('Added to Wishlist ❤️'); }
+  renderProducts();
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++;
+  else cart.push({ ...p, qty: 1 });
+  updateCartUI();
+  showToast(`${p.name} added to cart! 🛍`);
+}
+
+function updateCartUI() {
+  const count = cart.reduce((s,i) => s+i.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  const itemsEl = document.getElementById('cartItems');
+  if (!cart.length) {
+    itemsEl.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p><p style="margin-top:8px;font-size:.83rem">Add some amazing products!</p></div>`;
+    document.getElementById('cartFooter').style.display = 'none';
+    return;
+  }
+  document.getElementById('cartFooter').style.display = 'block';
+  itemsEl.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <img src="${i.img}" alt="${i.name}">
+      <div class="cart-item-info">
+        <div class="cart-item-brand">${i.brand}</div>
+        <div class="cart-item-name">${i.name}</div>
+        <div class="cart-item-bottom">
+          <span class="cart-item-price">₹${(i.price*i.qty).toLocaleString('en-IN')}</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${i.id},-1)">-</button>
+            <span class="qty-val">${i.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+          </div>
+        </div>
+        <button class="remove-item" onclick="removeItem(${i.id})">Remove</button>
+      </div>
+    </div>
+  `).join('');
+  const sub = cart.reduce((s,i) => s+i.price*i.qty, 0);
+  document.getElementById('cartSubtotal').textContent = '₹'+sub.toLocaleString('en-IN');
+  document.getElementById('cartTotal').textContent = '₹'+sub.toLocaleString('en-IN');
+}
+
+function changeQty(id, delta) {
+  const i = cart.find(x => x.id===id);
+  if (!i) return;
+  i.qty += delta;
+  if (i.qty <= 0) cart = cart.filter(x => x.id!==id);
+  updateCartUI();
+}
+
+function removeItem(id) {
+  cart = cart.filter(x => x.id!==id);
+  updateCartUI();
+}
+
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartOverlay').classList.toggle('open');
+  updateCartUI();
+}
+
+function checkout() {
+  showToast('Order placed! 🎉 Thank you for shopping with LUXE!');
+  cart = [];
+  updateCartUI();
+  toggleCart();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+renderProducts();
+</script>
+</body>
+</html>

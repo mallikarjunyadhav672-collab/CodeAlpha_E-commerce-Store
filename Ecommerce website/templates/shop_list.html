@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Shop — LUXE</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <nav>
+    <div class="logo">LUXE</div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/shop/" class="active">Shop</a></li>
+      <li><a href="/collections/">Collections</a></li>
+      <li><a href="/about/">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <input id="searchInput" class="search-box" type="text" placeholder="Search products..." oninput="filterProducts()">
+      <button class="cart-btn" onclick="toggleCart()">🛍 Cart <span class="cart-count" id="cartCount">0</span></button>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top:40px">
+    <div class="section-header">
+      <h2 class="section-title">All <span>Products</span></h2>
+    </div>
+    <div class="products-grid">
+      {% for p in page_obj.object_list %}
+      <div class="product-card">
+        <div class="product-img"><img src="{{ p.img }}" alt="{{ p.name }}" onerror="this.src='{% static 'img/placeholder.svg' %}'"></div>
+        <div class="product-info">
+          <div class="product-brand">{{ p.brand }}</div>
+          <div class="product-name">{{ p.name }}</div>
+          <div class="product-meta">
+            <div class="product-price">₹{{ p.price }}{% if p.old_price %}<span class="old">₹{{ p.old_price }}</span>{% endif %}</div>
+            <div class="stars">★ {{ p.rating }} ({{ p.reviews }})</div>
+          </div>
+          <button class="add-to-cart" onclick="addToCart({{ p.id }})">Add to cart</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="section" style="padding:18px 60px 60px">
+      <div style="display:flex;gap:8px;justify-content:center;align-items:center">
+        {% if page_obj.has_previous %}
+          <a class="btn-outline" href="?page={{ page_obj.previous_page_number }}{% if cat %}&cat={{ cat }}{% endif %}">← Prev</a>
+        {% endif %}
+        <div style="color:var(--muted)">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </div>
+        {% if page_obj.has_next %}
+          <a class="btn-outline" href="?page={{ page_obj.next_page_number }}{% if cat %}&cat={{ cat }}{% endif %}">Next →</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+<script src="{% static 'js/app.js' %}"></script>
+{% include 'partials/footer.html' %}
+</body>
+</html>
